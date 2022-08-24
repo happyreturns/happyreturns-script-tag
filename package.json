@@ -1,0 +1,25 @@
+{
+  "name": "@happyreturns/happyreturns-script-tag",
+  "version": "1.0.3",
+  "description": "HappyReturns Shopify Script Tag",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/happyreturns/happyreturns-script-tag.git"
+  },
+  "keywords": [
+    "happyreturns",
+    "shopify",
+    "script",
+    "tag"
+  ],
+  "author": "happyreturns",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/happyreturns/happyreturns-script-tag/issues"
+  },
+  "homepage": "https://github.com/happyreturns/happyreturns-script-tag#readme"
+}
