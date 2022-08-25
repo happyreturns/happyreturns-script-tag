@@ -1,6 +1,6 @@
 {
   "name": "@happyreturns/happyreturns-script-tag",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "HappyReturns Shopify Script Tag",
   "main": "index.js",
   "scripts": {
