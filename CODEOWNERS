@@ -1,5 +1,15 @@
 * @happyreturns/consumer-flow-team
 
+# Cloud Infra co-ownership — additive (IN-9796)
+/.github/ @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+/.platform/ @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+**/Dockerfile @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+*.dockerfile @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+**/Chart.yaml @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+**/values.yaml @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+**/Makefile @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+**/service.datadog.yaml @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
+
 # For security of github workflows infrastructure must own CODEOWNERS and .github/workflows dir
 # IMPORTANT: This must be at the bottom of the CODEOWNERS file
 /.github/workflows @happyreturns/infrastructure-team
