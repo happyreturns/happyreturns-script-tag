@@ -4,7 +4,6 @@
 /.github/ @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
 /.platform/ @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
 **/Dockerfile @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
-*.dockerfile @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
 **/Chart.yaml @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
 **/values.yaml @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
 **/Makefile @happyreturns/infrastructure-team @happyreturns/consumer-flow-team
