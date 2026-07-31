@@ -1,0 +1,38 @@
+name: CD - Security
+run-name: CD - Security - ${{ github.sha }}
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "14 5 * * 4"   # Thu 05:14 UTC — per-repo hashed weekly baseline slot (see happyreturns/github-workflows: docs/cd_security_v1.md "Scheduling the weekly baseline")
+
+concurrency:
+  # Serialize baselines on the same ref — don't cancel, let each baseline finish.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cd-security:
+    # cd always uploads the baseline SARIF (no upload toggle), so grant the upload perms
+    # here — a reusable workflow's permissions are capped by the caller. No pull-requests
+    # write (post-merge, no PR / no dependency-review).
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    uses: happyreturns/github-workflows/.github/workflows/cd_security_v1.yaml@master
+    secrets:
+      # Least-privilege: pass only the secrets the reusable needs — the hr-security-scan App
+      # credentials (a per-run token for private-module fetch) plus the optional Datadog metrics
+      # key — not the whole set via `inherit`. Requires the reusable to declare these secrets
+      # (github-workflows, IN-9972).
+      SECURITY_SCAN_APP_ID: ${{ secrets.SECURITY_SCAN_APP_ID }}
+      SECURITY_SCAN_APP_PRIVATE_KEY: ${{ secrets.SECURITY_SCAN_APP_PRIVATE_KEY }}
+      # Optional per-scan CPU/memory metrics to Datadog (IN-10109); declared required:false in the
+      # reusable, so an unprovisioned/empty value simply skips the metrics submission.
+      DD_CLOUD_INFRA_METRICS: ${{ secrets.DD_CLOUD_INFRA_METRICS }}
+    with:
+      languages: '["javascript-typescript"]'
+      runner-group: ${{ vars.RUNNER_DEV_SECURITY_STATIC }}
