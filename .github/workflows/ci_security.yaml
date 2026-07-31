@@ -1,0 +1,43 @@
+name: CI - Security
+# merge_group runs don't set github.head_ref, so fall back to ref_name.
+run-name: CI - Security - ${{ github.head_ref || github.ref_name }}
+
+on:
+  pull_request:
+    branches:
+      - master
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # Only cancel superseded pull_request runs; never cancel merge_group (merge-queue) runs —
+  # matches the reusable ci_security_v1's own concurrency scope.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # Job name is the standardized org context: "ci-security / Security Gate" (IN-9860).
+  ci-security:
+    # A reusable workflow's permissions are capped by the caller (it can only downgrade),
+    # so grant here what the called jobs need: SARIF upload (security-events), the Actions
+    # API telemetry read (actions), checkout (contents), and dependency-review's PR write.
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+      pull-requests: write
+    uses: happyreturns/github-workflows/.github/workflows/ci_security_v1.yaml@master
+    secrets:
+      # Least-privilege: pass only the secrets the reusable needs — the hr-security-scan App
+      # credentials (a per-run token covers private-module fetch + the Dependabot-alerts read)
+      # plus the optional Datadog metrics key — not the whole set via `inherit`. Requires the
+      # reusable to declare these secrets (github-workflows: on.workflow_call.secrets, IN-9972).
+      SECURITY_SCAN_APP_ID: ${{ secrets.SECURITY_SCAN_APP_ID }}
+      SECURITY_SCAN_APP_PRIVATE_KEY: ${{ secrets.SECURITY_SCAN_APP_PRIVATE_KEY }}
+      # Optional per-scan CPU/memory metrics to Datadog (IN-10109); declared required:false in the
+      # reusable, so an unprovisioned/empty value simply skips the metrics submission.
+      DD_CLOUD_INFRA_METRICS: ${{ secrets.DD_CLOUD_INFRA_METRICS }}
+    with:
+      languages: '["javascript-typescript"]'
+      fail-severity: none
+      upload: "true"
+      runner-group: ${{ vars.RUNNER_DEV_SECURITY_STATIC }}
