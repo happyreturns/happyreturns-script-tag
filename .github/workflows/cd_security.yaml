@@ -7,10 +7,12 @@ on:
       - master
   schedule:
     - cron: "14 5 * * 4"   # Thu 05:14 UTC — per-repo hashed weekly baseline slot (see happyreturns/github-workflows: docs/cd_security_v1.md "Scheduling the weekly baseline")
+  workflow_dispatch:   # manual run: full CodeQL baseline (+ container scan on a Trivy-opted repo)
 
 concurrency:
-  # Serialize baselines on the same ref — don't cancel, let each baseline finish.
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Partition by trigger path: GitHub keeps only ONE pending run per group, so the container scan
+  # (workflow_run) and the CodeQL baseline (push/schedule/dispatch) need separate slots (IN-10194).
+  group: ${{ github.workflow }}-${{ github.event_name == 'workflow_run' && 'container' || 'codeql' }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
