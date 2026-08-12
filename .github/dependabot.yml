@@ -16,5 +16,9 @@ updates:
       all-dependencies:
         patterns:
           - "*"
+      all-security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
 
 
